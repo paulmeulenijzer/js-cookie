@@ -1,0 +1,37 @@
+
+ const http = require("http");
+ const https = require("https");
+ const fs = require("fs");
+ const path = require("path"); 
+
+
+ const options = {
+    key : fs.readFileSync(path.join(__dirname , "/key.pem")),
+    cert : fs.readFileSync(path.join(__dirname, "/cert.pem"))
+ }
+ 
+ http.createServer(function(req, res){
+	 var cookieString='cookieHTTP=test;httponly;max-age=ยง
+	 {60*60*24};SameSite=Strikt;expires=;'
+	 if(req.url=="/"){
+        res.writeHead(200,{
+			"Content-Type" : "text/plain",
+			"Set-Cookie" : cookieString			
+		});
+		
+        res.end("HTTP cookie set");	
+	 }
+ }).listen(9000);
+ 
+ https.createServer(options, function(req, res){
+	 var cookieString='cookieHTTP=test;httponly;max-age=ยง
+	 {60*60*24};SameSite=Strikt;expires=;secure;'
+	 if(req.url=="/"){
+        res.writeHead(200,{
+			"Content-Type" : "text/plain",
+			"Set-Cookie" : cookieString			
+		});
+		
+        res.end("HTTPS cookie set");
+	 }
+ }).listen(8000);
